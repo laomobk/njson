@@ -1,0 +1,12 @@
+package njson
+
+const (
+	ELE_BASE = iota
+	ELE_INTEGER
+	ELE_FLOAT
+	ELE_STRING
+	ELE_ARRAY
+	ELE_DICT
+	ELE_BOOL
+	ELE_NULL
+)
