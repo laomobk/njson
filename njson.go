@@ -11,7 +11,7 @@ func makeObject(tok *tokenizer) *JsonObject {
 }
 
 func Load(fpath string) (*JsonObject, error) {
-	tok, err := NewTokenizerForTest(fpath)
+	tok, err := newTokenizer(fpath)
 	if err != nil {
 		return nil, err
 	}

@@ -122,6 +122,7 @@ func (self *JsonDictElement) String() string {
 
 func (self *JsonDictElement) Get(path string) (JsonElement, error) {
 	parts := strings.Split(path, ".")
+	fmt.Printf("%v\n", parts)
 
 	var left []string
 	var attr string
@@ -147,6 +148,7 @@ func (self *JsonDictElement) Get(path string) (JsonElement, error) {
 		if !ok {
 			return nil, fmt.Errorf(path + " : key '" + v + "' is not exists")
 		}
+
 		last = temp.(*JsonDictElement)
 	}
 

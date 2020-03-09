@@ -255,7 +255,3 @@ func newTokenizer(fpath string) (*tokenizer, error) {
 		filepath: fpath,
 	}, nil
 }
-
-func NewTokenizerForTest(fpath string) (*tokenizer, error) {
-	return newTokenizer(fpath)
-}

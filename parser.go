@@ -248,7 +248,3 @@ func (self *parser) parseElement() JsonElement {
 func (self *parser) parseJson() *JsonObject {
 	return newJsonObjectFromDictElement(self.parseDict())
 }
-
-func (self *parser) ParseJsonForTest() *JsonObject {
-	return self.parseJson()
-}
