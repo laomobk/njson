@@ -8,11 +8,12 @@ import (
 )
 
 type tokenizer struct {
-	source   []byte
-	filepath string
-	_cp      int
-	_ln      int
-	_ofs     int
+	source    []byte
+	filepath  string
+	_cp       int
+	_ln       int
+	_ofs      int
+	jpathMode bool
 }
 
 func (self *tokenizer) peek(step int) (byte, bool) {
@@ -157,6 +158,30 @@ func (self *tokenizer) parseNumber() (string, int) {
 	return string(buf), tokType
 }
 
+func (self *tokenizer) parserIdentifier() (string, int) {
+	cur := &self._cp
+	buf := []byte{}
+
+	allowed_within_esc := []rune{'.', '#'}
+
+	var ch byte
+	var nxch byte
+
+	for *cur < len(self.source) {
+		ch = self.source[*cur]
+
+		if ch == '\\' && *cur+1 < len(self.source) {
+			nxch = self.source[*cur+1]
+
+			if inRuneArray(allowed_within_esc, nxch) {
+
+			}
+		}
+
+		*cur++
+	}
+}
+
 func (self *tokenizer) handleError(err error) {
 	msg := err.Error()
 
@@ -227,7 +252,7 @@ func (self *tokenizer) run() *tokenStream {
 				stream.addToken(self.makeToken(numstr, tokType))
 				self._ofs += len(numstr) - 1
 
-			} else {
+			} else if !self.jpathMode {
 				self.handleError(fmt.Errorf("invalid character : " + string(ch)))
 			}
 		}
