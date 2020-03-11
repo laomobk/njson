@@ -26,3 +26,7 @@ func (self *JsonObject) DGet(path string) JsonElement {
 func (self *JsonObject) ToDictElement() *JsonDictElement {
 	return self._dict
 }
+
+func (self *JsonObject) ForEach(forfunc func(string, JsonElement)) {
+	self._dict.ForEach(forfunc)
+}

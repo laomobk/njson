@@ -193,6 +193,7 @@ func (self *parser) parseDict() *JsonDictElement {
 	self.nextTok() // eat '{'
 
 	m := map[string]JsonElement{}
+	keys := []string{}
 
 	if self.nowTok().Equals("}") {
 		self.nextTok()
@@ -204,10 +205,13 @@ func (self *parser) parseDict() *JsonDictElement {
 	fk, fv := self.parseKVPair()
 	m[fk] = fv
 
+	keys = append(keys, fk)
+
 	for self.nowTok().Equals(",") {
 		self.nextTok() // eat ','
 		k, v := self.parseKVPair()
 		m[k] = v
+		keys = append(keys, k)
 	}
 
 	if !self.nowTok().Equals("}") {
@@ -218,6 +222,7 @@ func (self *parser) parseDict() *JsonDictElement {
 
 	return &JsonDictElement{
 		dict: m,
+		keys: keys,
 	}
 }
 

@@ -41,7 +41,7 @@ type JsonStringElement struct {
 func (self *JsonStringElement) Raw() interface{} { return self.ToString() }
 func (self *JsonStringElement) ToString() string { return self.value }
 func (self *JsonStringElement) Type() int        { return ELE_STRING }
-func (self *JsonStringElement) String() string   { return fmt.Sprintf("'%s'", self.value) }
+func (self *JsonStringElement) String() string   { return fmt.Sprintf("%s", self.value) }
 
 type _JsonNumberSlot struct {
 	vfloat float64
@@ -79,7 +79,6 @@ type JsonArrayElement struct {
 func (self *JsonArrayElement) Raw() interface{}              { return self.ToElementArray() }
 func (self *JsonArrayElement) ToElementArray() []JsonElement { return self.array }
 func (self *JsonArrayElement) Type() int                     { return ELE_ARRAY }
-
 func (self *JsonArrayElement) String() string {
 	item := make([]string, len(self.array))
 
@@ -88,6 +87,11 @@ func (self *JsonArrayElement) String() string {
 	}
 
 	return "[" + strings.Join(item, ", ") + "]"
+}
+func (self *JsonArrayElement) ForEach(forfunc func(int, JsonElement)) {
+	for i, v := range self.array {
+		forfunc(i, v)
+	}
 }
 
 type JsonBoolElement struct {
@@ -105,6 +109,7 @@ type JsonDictElement struct {
 	JsonBaseElement
 
 	dict map[string]JsonElement
+	keys []string /* for ForEach  */
 }
 
 func (self *JsonDictElement) Raw() interface{}               { return self.ToDict() }
@@ -119,10 +124,15 @@ func (self *JsonDictElement) String() string {
 
 	return "{" + strings.Join(item, ", ") + "}"
 }
+func (self *JsonDictElement) ForEach(forfunc func(string, JsonElement)) {
+	for i := 0; i < len(self.keys); i++ {
+		k := self.keys[i]
+		forfunc(k, self.dict[k])
+	}
+}
 
 func (self *JsonDictElement) Get(path string) (JsonElement, error) {
 	parts := strings.Split(path, ".")
-	fmt.Printf("%v\n", parts)
 
 	var left []string
 	var attr string
@@ -163,7 +173,7 @@ func (self *JsonDictElement) DGet(path string) JsonElement {
 	ele, err := self.Get(path)
 
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	return ele

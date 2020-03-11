@@ -95,3 +95,72 @@ func Get(element JsonElement, indexOrKey interface{}) (JsonElement, error) {
 
 	return nil, fmt.Errorf("Integer or string excepted")
 }
+
+func ForEach(jsonElement JsonElement, forfunc func(JsonElement)) {
+	switch jsonElement.(type) {
+
+	case *JsonDictElement:
+		o := jsonElement.(*JsonDictElement)
+		for _, v := range o.keys {
+			forfunc(o.dict[v])
+		}
+	case *JsonArrayElement:
+		o := jsonElement.(*JsonArrayElement)
+		for _, v := range o.array {
+			forfunc(v)
+		}
+	default:
+		panic("Only dict or array support for range.")
+
+	}
+
+}
+
+func StringElement(o JsonElement) *JsonStringElement {
+	if v, ok := o.(*JsonStringElement); ok {
+		return v
+	}
+	return nil
+}
+
+func IntegerElement(o JsonElement) *JsonIntegerElement {
+	if v, ok := o.(*JsonIntegerElement); ok {
+		return v
+	}
+	return nil
+}
+
+func FloatElement(o JsonElement) *JsonFloatElement {
+	if v, ok := o.(*JsonFloatElement); ok {
+		return v
+	}
+	return nil
+}
+
+func ArrayElement(o JsonElement) *JsonArrayElement {
+	if v, ok := o.(*JsonArrayElement); ok {
+		return v
+	}
+	return nil
+}
+
+func DictElement(o JsonElement) *JsonDictElement {
+	if v, ok := o.(*JsonDictElement); ok {
+		return v
+	}
+	return nil
+}
+
+func NullElement(o JsonElement) *JsonNullElement {
+	if v, ok := o.(*JsonNullElement); ok {
+		return v
+	}
+	return nil
+}
+
+func BoolElement(o JsonElement) *JsonBoolElement {
+	if v, ok := o.(*JsonBoolElement); ok {
+		return v
+	}
+	return nil
+}
